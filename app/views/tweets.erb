@@ -1,0 +1,9 @@
+<h1>Estos son los tweets de <%= @handle %></h1>
+
+<div id="spinner" class="spinner" style="display:none;">
+  <img id="img-spinner" src="spinner.gif" alt="Loading"/>
+</div>
+
+<% @tweets.each do  |t| %>
+	<p><%= t.tweet %></p><br>
+<% end %>

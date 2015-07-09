@@ -1,0 +1,8 @@
+<% if session[:username] %>
+<h1>Bienvenido a tu Twitter?</h1>
+<h1>Tu usuario es <%= session[:username] %></h1>
+<form action="/tweet_media" method="post">
+	Tweet:	<textarea rows="4" cols="50" type="text" name="tweet"></textarea><br><br>
+	<input type="submit" value="Enviar">
+</form><br>
+<% end %>

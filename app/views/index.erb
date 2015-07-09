@@ -1,0 +1,20 @@
+<h1>Bienvenido a Twitter?</h1>
+
+<form action="/fetch" method="post">
+Twitter Handle: <input type="text" name="twitter_handle"><br><br>
+<input type="submit" value="Enviar">
+</form>
+
+<h1>Quieres Twitear?</h1><br>
+<form action="/tweet" method="post">
+	Tweet:	<textarea rows="4" cols="50" type="text" name="tweet"></textarea><br><br>
+	<input type="submit" value="Enviar">
+</form><br>
+
+<% if @message %>
+	<%= @message %><br><br>
+<% end %>
+
+<form action="/sign_in" method="get">
+	<input type="submit" value="Sign in with Twitter">
+</form><br>
