@@ -25,24 +25,14 @@ end
 
 post '/tweet_media' do
   @message = nil
-    # Recibe el input del usuario
+  # Recibe el input del usuario
   tweet = params[:tweet]
 
-  client = Twitter::REST::Client.new do |config|
-    config.consumer_key        = ENV['TWITTER_KEY']
-    config.consumer_secret     = ENV["TWITTER_SECRET"]
-    config.access_token        = session[:oauth_token]
-    config.access_token_secret = session[:oauth_token_secret]
-  end
+  user = TwitterUser.find_by(username: session[:username])
+  id = user.tweet_later(tweet)
 
-  client.update(tweet)
-  @message = "enviamos el tweet"
-  # begin
-  #   @message = "el tweet se envio con exito"
-  # rescue
-  #   @message = "el tweet ya se envio antes"
-  # end
-  erb :index
+  @message = "El Job Id es: #{id}"
+  id
 end
 
 
@@ -62,10 +52,6 @@ get '/auth' do
   # Despues de utilizar el 'request token' ya podemos borrarlo, porque no vuelve a servir. 
   session.delete(:request_token)
 
-  puts "esto es el access_token: #{@access_token.inspect}"
-  puts "-"*60
-  puts "access_token: #{@access_token.params}"
-  puts "-"*60
   username = @access_token.params['screen_name']
   session[:oauth_token] = @access_token.params['oauth_token']
   session[:oauth_token_secret] = @access_token.params['oauth_token_secret']
@@ -86,8 +72,7 @@ get '/:username' do
   # Se crea un TwitterUser si no existe en la base de datos de lo contrario trae de la base al usuario.
 
   tweets = Tweets.where(twitter_user_id: @user.id)
-  # cosa = tweets[0].id
-  # puts "este es el id: #{cosa}"
+
   if tweets.empty?
     tweets = TWITTER.user_timeline(username: @user.username)
     tweets.each do  |t|
@@ -112,11 +97,15 @@ get '/:username' do
   erb :tweets
 end
 
-
-
-
-
-
+get '/status/:job_id' do
+  # regresa el status de un job a una petición AJAX
+  job_id = params[:job_id]
+  if job_is_complete(job_id)
+    message = "Se envio el tweet"
+  else
+    message = "No se ha enviado"
+  end
+end
 
 
 
